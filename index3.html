@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Project Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background-color: #00274d;
+            color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #00274d;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            padding: 15px;
+            background-color: #f1f1f1;
+            font-weight: 500;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header i {
+            font-style: normal;
+            color: #040404;
+        }
+
+        .card-content {
+            padding: 15px;
+            flex: 1;
+        }
+
+        .card-content iframe {
+            width: 100%;
+            height: 180px;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 10px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #00274d;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #00509e;
+        }
+
+        .notice-board {
+            position: fixed;
+            right: 20px;
+            top: 80px;
+            width: 220px;
+            background: #f1f1f1;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .notice-board h4 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 60px;
+            background: #00274d;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .sidebar i {
+            font-style: normal;
+            color: #aaa;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Deep Thought</h1>
+        <button class="button">Submit Task</button>
+    </header>
+
+    <div class="sidebar">
+        <i>1</i>
+    </div>
+
+    <div class="container">
+        <!-- Dynamic Project Title -->
+        <div class="section-title" id="project-title"></div>
+        <!-- Dynamic Description -->
+        <p class="description" id="project-description"></p>
+
+        <!-- Dynamic Project Image -->
+        <img id="project-image" src="" alt="Technical Project Management" style="width:100%; max-width:600px; margin-bottom:20px;"/>
+
+        <!-- Learning Outcomes -->
+        <div class="section-title">Learning Outcomes</div>
+        <ul id="learning-outcomes"></ul>
+
+        <!-- Prerequisites -->
+        <div class="section-title">Prerequisites</div>
+        <ul id="prerequisites"></ul>
+
+        <!-- Tasks Grid -->
+        <div class="grid" id="tasks-grid"></div>
+
+        <!-- Notice Board -->
+        <div class="notice-board">
+            <h4>Notice Board</h4>
+            <p>Important updates will appear here.</p>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2024 Deep Thought. All rights reserved.
+    </footer>
+
+    <script>
+        // JSON data
+        const projectData = {
+            "title": "Technical Project Management",
+            "description": "You can learn project management by applying the simple methods of project management. How you can apply project management in each and every step of your deliverables? Let's figure it out together.",
+            "project_image": "https://bs-uploads.toptal.io/blackfish-uploads/components/seo/content/og_image_file/og_image/1114276/0413_What_is_a_Technical_Project_Manager_Luke_Social-21e35c2d76465934c0f844c396db762a.png",
+            "learning_outcomes": [
+                "Bare minimum knowledge of project management",
+                "4SA Concept",
+                "Would be able to handle any project efficiently"
+            ],
+            "pre_requisites": [
+                "An open mind to learn any concept",
+                "Thought of Unlearning and Relearning"
+            ],
+            "tasks": [
+                {
+                    "task_title": "Explore the world of management",
+                    "task_description": "As a project manager, you play an important role in leading a project through initiation, planning, execution, monitoring, controlling and completion. How? Do you want to manage each and every step of your life?",
+                    "assets": [
+                        {
+                            "asset_title": "Technical Project Management",
+                            "asset_content": "https://www.youtube.com/embed/TiMRwri1xJ8",
+                            "asset_type": "video"
+                        },
+                        {
+                            "asset_title": "Threadbuild",
+                            "asset_description": "Watch the video and thread build, and jot out key threads while watching that video.",
+                            "asset_content": "",
+                            "asset_type": "input_asset"
+                        },
+                        {
+                            "asset_title": "Structure you pointers",
+                            "asset_description": "Write a 400-500 word article, from your thread. Publish your understanding, and showcase your learning to the entire world.",
+                            "asset_content": "",
+                            "asset_type": "input_asset"
+                        },
+                        {
+                            "asset_title": "4SA Method",
+                            "asset_description": "To explore more read more",
+                            "asset_content": "https://dtthon.deepthought.education/sharer?id=01aa3cff-db8e-8d9d-afc0-1671715937878",
+                            "asset_type": "article"
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // Set the project title and description
+        document.getElementById('project-title').textContent = projectData.title;
+        document.getElementById('project-description').innerHTML = projectData.description;
+        document.getElementById('project-image').src = projectData.project_image;
+
+        // Set the learning outcomes
+        const learningOutcomesList = document.getElementById('learning-outcomes');
+        projectData.learning_outcomes.forEach(outcome => {
+            const li = document.createElement('li');
+            li.textContent = outcome;
+            learningOutcomesList.appendChild(li);
+        });
+
+        // Set the prerequisites
+        const prerequisitesList = document.getElementById('prerequisites');
+        projectData.pre_requisites.forEach(prerequisite => {
+            const li = document.createElement('li');
+            li.textContent = prerequisite;
+            prerequisitesList.appendChild(li);
+        });
+
+        // Set the tasks grid
+        const tasksGrid = document.getElementById('tasks-grid');
+        projectData.tasks.forEach(task => {
+            const taskCard = document.createElement('div');
+            taskCard.classList.add('card');
+
+            // Task Header
+            const taskHeader = document.createElement('div');
+            taskHeader.classList.add('card-header');
+            taskHeader.textContent = task.task_title;
+
+            // Task Description
+            const taskDescription = document.createElement('div');
+            taskDescription.classList.add('card-content');
+            taskDescription.textContent = task.task_description;
+
+            taskCard.appendChild(taskHeader);
+            taskCard.appendChild(taskDescription);
+
+            // Task Assets
+            task.assets.forEach(asset => {
+                const assetCard = document.createElement('div');
+                assetCard.classList.add('card');
+
+                const assetHeader = document.createElement('div');
+                assetHeader.classList.add('card-header');
+                assetHeader.textContent = asset.asset_title;
+
+                const assetContent = document.createElement('div');
+                assetContent.classList.add('card-content');
+
+                if (asset.asset_type === "video") {
+                    const iframe = document.createElement('iframe');
+                    iframe.src = asset.asset_content;
+                    assetContent.appendChild(iframe);
+                } else if (asset.asset_type === "input_asset") {
+                    const input = document.createElement('textarea');
+                    input.placeholder = asset.asset_description;
+                    assetContent.appendChild(input);
+                } else if (asset.asset_type === "article") {
+                    const link = document.createElement('a');
+                    link.href = asset.asset_content;
+                    link.target = "_blank";
+                    link.textContent = "Read More";
+                    assetContent.appendChild(link);
+                }
+
+                assetCard.appendChild(assetHeader);
+                assetCard.appendChild(assetContent);
+                tasksGrid.appendChild(assetCard);
+            });
+
+            tasksGrid.appendChild(taskCard);
+        });
+    </script>
+</body>
+</html>

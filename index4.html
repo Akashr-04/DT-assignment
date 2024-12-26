@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expanded Journey Board</title>
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #ffffff;
+      padding: 15px 30px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #1e3a8a;
+    }
+
+    .header button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+
+    .header button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Container */
+    .container {
+      display: flex;
+      margin: 20px;
+      gap: 20px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 300px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      position: relative;
+    }
+
+    .sidebar h2 {
+      font-size: 18px;
+      color: #1e3a8a;
+      margin-bottom: 15px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar ul li {
+      margin: 10px 0;
+      font-size: 14px;
+      color: #333;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 4px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .sidebar ul li:hover {
+      color: #ffffff;
+      background-color: #1e3a8a;
+    }
+
+    .sidebar .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      background: none;
+      border: none;
+      color: #1e3a8a;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .card h3 {
+      font-size: 16px;
+      color: #1e3a8a;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .card button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+
+    .card button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Floating Buttons */
+    .floating-buttons {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .floating-buttons button {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .floating-buttons button:hover {
+      background-color: #0056b3;
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <h1>Deep Thought</h1>
+    <button>Submit Task</button>
+  </header>
+
+  <!-- Container -->
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <button class="close-btn">&times;</button>
+      <h2>Journey Board</h2>
+      <ul id="sidebar-tasks"></ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="card" id="project-title">
+        <h3>Loading...</h3>
+        <p id="short-description">Loading...</p>
+        <img id="project-image" src="" alt="Project Image" style="width: 100%; border-radius: 8px; margin-bottom: 15px;">
+        <p id="project-description">Loading...</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Floating Buttons -->
+  <div class="floating-buttons">
+    <button>?</button>
+    <button>☺</button>
+    <button>★</button>
+  </div>
+
+  <script>
+    // Data to be rendered
+    const projectData = {
+      "title": "Technical Project Management",
+      "description": `<p>Have you ever thought, Pareto's Law can be applied to cooking? Your thinking starts when you start thinking beyond your thinking.</p>
+        <p>Let's prepare Sandwiches, we will use Pareto&rsquo;s Law. That&rsquo;s an 80-20 approach.<br>80% of the time in researching, and planning and 20% of the time in implementation.</p>
+        <p>So for preparing sandwiches, we need vegetables, bread, cheese, butter and much more. So initially we collect all the stuff and then chop the vegetables, grate the cheese, and make a mash of potato. So this all comes in 80% and then comes 20% where we will roast the bread, spread the sauce, place the mash put some cheese, and heat it for a while and our sandwich is ready.</p>
+        <p>Similarly while creating any functionality 80% of the time is spent on consequences that might appear, some parameters we have to take care of, the scope of the variable, and some dependent functions, and then 20% comes from implementation.</p>
+        <p>Let's start thinking together, and search for how you can get the essence of project management.</p>`,
+      "short_description": "You can learn project management by applying the simple methods of project management. How you can apply project management in each and every step of your deliverables? Let's figure it out together",
+      "learning_outcomes": [
+        "Bare minimum knowledge of project management",
+        "4SA Concept",
+        "Would be able to handle any project efficiently"
+      ],
+      "pre_requisites": [
+        "An open mind to learn any concept",
+        "Thought of Unlearning and Relearning"
+      ],
+      "project_image": "https://bs-uploads.toptal.io/blackfish-uploads/components/seo/content/og_image_file/og_image/1114276/0413_What_is_a_Technical_Project_Manager_Luke_Social-21e35c2d76465934c0f844c396db762a.png",
+      "tasks": [
+        {
+          "task_title": "Explore the world of management",
+          "task_description": "As a project manager, you play an important role in leading a project through initiation, planning, execution, monitoring, controlling and completion. How? Do you want to manage each and every step of your life?",
+          "assets": [
+            {
+              "asset_title": "Technical Project Management",
+              "asset_content": "https://www.youtube.com/embed/TiMRwri1xJ8",
+              "asset_type": "video"
+            },
+            {
+              "asset_title": "Threadbuild",
+              "asset_description": "Watch the video and thread build, and jot out key threads while watching that video.",
+              "asset_type": "input_asset"
+            },
+            {
+              "asset_title": "Structure your pointers",
+              "asset_description": "Write a 400-500 word article, from your thread. Publish your understanding, and showcase your learning to the entire world.",
+              "asset_type": "input_asset"
+            },
+            {
+              "asset_title": "4SA Method",
+              "asset_content": "https://dtthon.deepthought.education/sharer?id=01aa3cff-db8e-8d9d-afc0-1671715937878",
+              "asset_type": "article"
+            }
+          ]
+        }
+      ]
+    };
+
+    // Rendering the project information
+    document.querySelector('#project-title h3').textContent = projectData.title;
+    document.querySelector('#short-description').textContent = projectData.short_description;
+    document.querySelector('#project-image').src = projectData.project_image;
+    document.querySelector('#project-description').innerHTML = projectData.description;
+
+    // Rendering learning outcomes
+    const learningOutcomesList = document.createElement('ul');
+    projectData.learning_outcomes.forEach(outcome => {
+      const li = document.createElement('li');
+      li.textContent = outcome;
+      learningOutcomesList.appendChild(li);
+    });
+    document.querySelector('#project-title').appendChild(learningOutcomesList);
+
+    // Rendering pre-requisites
+    const preRequisitesList = document.createElement('ul');
+    projectData.pre_requisites.forEach(prerequisite => {
+      const li = document.createElement('li');
+      li.textContent = prerequisite;
+      preRequisitesList.appendChild(li);
+    });
+    document.querySelector('#project-title').appendChild(preRequisitesList);
+
+    // Rendering tasks in sidebar
+    const sidebarTasks = document.getElementById('sidebar-tasks');
+    projectData.tasks.forEach(task => {
+      const li = document.createElement('li');
+      li.textContent = task.task_title;
+      sidebarTasks.appendChild(li);
+    });
+  </script>
+</body>
+</html>
